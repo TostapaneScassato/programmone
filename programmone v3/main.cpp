@@ -1072,7 +1072,7 @@ void crediti() {
    cout << "User Experience Designer: - - - Per la sua incolumita', non disponibile" << endl;
    cout << "Code Tester:- - - - - - - - - - Carletti Stefano" << endl;
    cout << "Quality Assurance Specialist: - Nessuno" << endl;
-   cout << "COPYRIGHT - Nessuno, perche' siamo poveri" << endl;
+   cout << "COPYRIGHT - 2025 Carletti Stefano (MIT License)" << endl;
    cout << endl;
    PAUSE();
    account();
