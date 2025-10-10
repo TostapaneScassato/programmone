@@ -45,17 +45,21 @@ public:
       cerr << "[error] " << parameter;
       wait();
    }
-   void title(string title, bool clear) {
+   void title(string parameter, bool clear) {
       if (clear) CLEAR();
       cout << "O";
-      for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+      for (int i=0; i < parameter.length()*2 + 5; i++) cout << "-";
       cout << "O" << endl << "|   ";
       
-      for (int i=0; i < title.length(); i++) cout << title.at(i) << " ";
+      for (int i=0; i < parameter.length(); i++) cout << parameter.at(i) << " ";
       cout << "  |" << endl << "O";
 
-      for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+      for (int i=0; i < parameter.length()*2 + 5; i++) cout << "-";
       cout << "O" << endl << endl;
+   }
+   void pure(string parameter) {
+      cout << parameter;
+      wait();
    }
 };
 //     global object
@@ -105,8 +109,9 @@ void mainMenu() {
 
    switch (INT_CHOICE) {
    case 0:
+      output.pure("Arrivederci, a presto");
+      return;
       break;
-   
    default:
       break;
    }
