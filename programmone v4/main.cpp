@@ -38,18 +38,28 @@ float REAL_CHOICE;
 
 // functions
 //   utilities
-void title(string title, bool clear) {
-   if (clear) CLEAR();
-   cout << "O";
-   for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
-   cout << "O" << endl << "|   ";
-   
-   for (int i=0; i < title.length(); i++) cout << title.at(i) << " ";
-   cout << "  |" << endl << "O";
 
-   for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
-   cout << "O" << endl << endl;
-}
+class OUTPUT {
+public:
+   void error(string parameter) {
+      cerr << "[error] " << parameter;
+      wait();
+   }
+   void title(string title, bool clear) {
+      if (clear) CLEAR();
+      cout << "O";
+      for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+      cout << "O" << endl << "|   ";
+      
+      for (int i=0; i < title.length(); i++) cout << title.at(i) << " ";
+      cout << "  |" << endl << "O";
+
+      for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+      cout << "O" << endl << endl;
+   }
+};
+//     global object
+OUTPUT output;
 
 bool cinGood() {
    if (cin.fail()) {
@@ -70,24 +80,36 @@ void wait() {
    return;
 }
 
-void ERROR(string parameter) {
-   cerr << "[error] " << parameter;
-   wait();
-}
+
 //   body
 void mainMenu() {
    do {
-      title("MAIN MENU", true);
-      cout << "Welcome to the main menu!" << endl;
-      cout << "What would you like to do?" << endl;
+      output.title("MAIN MENU", true);
+      cout << "Welcome to the main menu! What would you like to do?" << endl;
       cout << "[0] Exit the programmone :(" << endl;
       cout << "> "; cin >> REAL_CHOICE;
 
       if (!cinGood()) {
-         ERROR("Insert an integer");
+         output.error("insert an integer");
+         continue;
       }
 
+      INT_CHOICE = int(REAL_CHOICE);
+
+      if (float(INT_CHOICE) != REAL_CHOICE) {
+         output.error("insert an integer");
+         continue;
+      } else break;
+      
    } while (true);
+
+   switch (INT_CHOICE) {
+   case 0:
+      break;
+   
+   default:
+      break;
+   }
 
 }
 
