@@ -28,9 +28,14 @@ using namespace std;
    return EXIT_FAILURE;
 #endif
 
+// global variables
+int INT_CHOICE;
+float REAL_CHOICE;
+
 // prototypes
 
-// utilities
+// functions
+//   utilities
 void title(string title, bool clear) {
    if (clear) CLEAR();
    cout << "O";
@@ -41,11 +46,42 @@ void title(string title, bool clear) {
    cout << "  |" << endl << "O";
 
    for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
-   cout << "O" << endl;
+   cout << "O" << endl << endl;
+}
+
+bool cinGood() {
+   if (cin.fail()) {
+      cin.clear();
+      cin.ignore(9999, '\n');
+      return false;
+   } else
+      return true;
+}
+
+void ERROR(string parameter) {
+   cerr << "[error] " << parameter;
+   //wait();
+}
+//   body
+void mainMenu() {
+   do {
+      title("MAIN MENU", true);
+      cout << "Welcome to the main menu!" << endl;
+      cout << "What would you like to do?" << endl;
+      cout << "[0] Exit the programmone :(" << endl;
+      cout << "> "; cin >> REAL_CHOICE;
+
+      if (!cinGood()) {
+         ERROR("Insert an integer");
+      }
+
+   } while (true);
+
 }
 
 // main
 int main() {
+   mainMenu();
 
    return 0;
 }
