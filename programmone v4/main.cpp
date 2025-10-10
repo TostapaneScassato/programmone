@@ -2,6 +2,7 @@
 using namespace std;
 #define PROGRAMMONE_VERSION 4
 
+// preprocessor
 #ifdef _WIN32
    #define byte win_byte_override
    #include <windows.h>
@@ -23,7 +24,28 @@ using namespace std;
    cout << "I don't feel like porting this to Android. Next time use a real Linux distro\n";
    return EXIT_FAILURE:
 #else
-   cerr << "[catastrophic error] I couldn't determine you're Operating System!\n";
+   cerr << "[catastrophic failure] I couldn't determine you're Operating System!\n";
    return EXIT_FAILURE;
 #endif
 
+// prototypes
+
+// utilities
+void title(string title, bool clear) {
+   if (clear) CLEAR();
+   cout << "O";
+   for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+   cout << "O" << endl << "|   ";
+   
+   for (int i=0; i < title.length(); i++) cout << title.at(i) << " ";
+   cout << "  |" << endl << "O";
+
+   for (int i=0; i < title.length()*2 + 5; i++) cout << "-";
+   cout << "O" << endl;
+}
+
+// main
+int main() {
+
+   return 0;
+}
