@@ -13,8 +13,10 @@ using namespace std;
    #define PAUSE() system("pause")
 #elif __linux__
    #include <unistd.h>
+   #include <thread>
+   #include <chrono>
    #define OS "linux"
-   #define SLEEP(period) std::this_thread::sleep_for(std::chrono::milliseconds(period))
+   #define SLEEP(period_milliseconds) std::this_thread::sleep_for(std::chrono::milliseconds(period_milliseconds))
    #define CLEAR() system("clear")
    #define PAUSE() system("read -n 1 -s -r -p \"Press a key to continue...\"")
 #elif __APPLE__
@@ -58,9 +60,19 @@ bool cinGood() {
       return true;
 }
 
+void wait() {
+   cerr << ".";
+   SLEEP(300);
+   cerr << ".";
+   SLEEP(300);
+   cerr << ".";
+   SLEEP(300);
+   return;
+}
+
 void ERROR(string parameter) {
    cerr << "[error] " << parameter;
-   //wait();
+   wait();
 }
 //   body
 void mainMenu() {
