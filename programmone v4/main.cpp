@@ -35,6 +35,7 @@ int INT_CHOICE;
 float REAL_CHOICE;
 
 // prototypes
+void wait();
 
 // functions
 //   utilities
@@ -62,17 +63,34 @@ public:
       wait();
    }
 };
+class INPUT {
+public:
+   int integer(string request) {
+      float real;
+      int parameter;
+
+      do {
+         cout << request;  cin >> real;
+
+         if (cin.fail()) {
+            cin.clear();
+            cin.ignore(9999, '\n');
+            continue;
+         }
+
+         parameter = int(real);
+
+         if (float(parameter) != real) continue;
+         else break;
+
+      } while (true);
+      
+      return parameter;
+   }
+};
 //     global object
 OUTPUT output;
-
-bool cinGood() {
-   if (cin.fail()) {
-      cin.clear();
-      cin.ignore(9999, '\n');
-      return false;
-   } else
-      return true;
-}
+INPUT input;
 
 void wait() {
    cerr << ".";
@@ -87,32 +105,21 @@ void wait() {
 
 //   body
 void mainMenu() {
-   do {
-      output.title("MAIN MENU", true);
-      cout << "Welcome to the main menu! What would you like to do?" << endl;
-      cout << "[0] Exit the programmone :(" << endl;
-      cout << "> "; cin >> REAL_CHOICE;
 
-      if (!cinGood()) {
-         output.error("insert an integer");
-         continue;
-      }
+   output.title("MAIN MENU", true);
+   cout << "Welcome to the main menu! What would you like to do?" << endl;
+   cout << "[0] Exit the programmone :(" << endl;
+   INT_CHOICE = input.integer("> ");
 
-      INT_CHOICE = int(REAL_CHOICE);
-
-      if (float(INT_CHOICE) != REAL_CHOICE) {
-         output.error("insert an integer");
-         continue;
-      } else break;
-      
-   } while (true);
 
    switch (INT_CHOICE) {
    case 0:
-      output.pure("Arrivederci, a presto");
+      output.pure("Bye bye, come back soon!");
       return;
       break;
    default:
+      output.error("Insert a correct option");
+      mainMenu();
       break;
    }
 
