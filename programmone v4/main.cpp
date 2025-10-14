@@ -31,6 +31,7 @@ using namespace std;
 #endif
 
 // global variables
+bool DEBUG_MODE = false;
 int INT_CHOICE;
 float REAL_CHOICE;
 
@@ -58,9 +59,12 @@ public:
       for (int i=0; i < parameter.length()*2 + 5; i++) cout << "-";
       cout << "O" << endl << endl;
    }
-   void pure(string parameter) {
+   void pure (string parameter) {
       cout << parameter;
       wait();
+   }
+   void debug(string parameter) {
+      if (DEBUG_MODE) cout << "[debug] " << parameter << endl;
    }
 };
 class INPUT {
