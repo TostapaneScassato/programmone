@@ -37,7 +37,7 @@ string STRING_CHOICE;
 
 // prototypes
 void wait();
-void gamblingMenu();
+void gamblingMenu(bool skipAgeCheck=false);
 
 // functions
 //   utilities
@@ -136,18 +136,36 @@ void mainMenu() {
 
 }
 
-void gamblingMenu() {
-   output.title("Are you 18 or older? (yes/no)", true);
-   if (input.letters("> ") != "yes") {
+void gamblingMenu(bool skipAgeCheck) {
+   if (!skipAgeCheck) {
+      output.title("Are you 18 or older? (yes/no)", true);
+      if (input.letters("> ") != "yes") {
+         output.pure("You'll be redirected to the main menu");
+         mainMenu();
+         return;
+      }
+   }
+   
+   output.title("GAMBLING MENU", true);
+   cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
+   cout << "[0] Go back to the main menu." << endl;
+   INT_CHOICE = input.integer("> ");
+
+   switch (INT_CHOICE) {
+   case 0:
       output.pure("You'll be redirected to the main menu");
       mainMenu();
-      return;
+      break;
+   default:
+      output.error("Please insert a correct option");
+      gamblingMenu(true);
+      break;
    }
-   output.title("GAMBLING MENU", true);
 }
+
 // main
 int main() {
-   PAUSE();
+   //PAUSE();
    mainMenu();
 
    return 0;
