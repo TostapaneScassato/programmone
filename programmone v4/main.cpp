@@ -1,4 +1,5 @@
 #include <iostream>
+#include <time.h>
 using namespace std;
 #define PROGRAMMONE_VERSION 4
 
@@ -97,9 +98,28 @@ public:
       return STRING_CHOICE;
    }
 };
+class GAMBLING {
+public:
+   class RANDOM {
+   public:
+      int integer(int &rangeMinimum, int &rangeMaximum) {
+
+         if (rangeMaximum < rangeMinimum) {
+            int temp;
+            temp = rangeMinimum;
+            rangeMinimum = rangeMaximum;
+            rangeMaximum = temp;
+         }
+
+         return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
+      }
+   };
+};
 //     global object
 OUTPUT output;
 INPUT input;
+GAMBLING gambling;
+GAMBLING::RANDOM randomGenerator;
 
 void wait() {
    cerr << ".";
@@ -166,6 +186,7 @@ void gamblingMenu(bool skipAgeCheck) {
 // main
 int main() {
    //PAUSE();
+   srand(time(NULL));
    mainMenu();
 
    return 0;
