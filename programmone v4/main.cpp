@@ -33,10 +33,11 @@ using namespace std;
 // global variables
 bool DEBUG_MODE = false;
 int INT_CHOICE;
-float REAL_CHOICE;
+string STRING_CHOICE;
 
 // prototypes
 void wait();
+void gamblingMenu();
 
 // functions
 //   utilities
@@ -91,6 +92,10 @@ public:
       
       return parameter;
    }
+   string letters(string request) {
+      cout << request;  cin >> STRING_CHOICE;
+      return STRING_CHOICE;
+   }
 };
 //     global object
 OUTPUT output;
@@ -106,17 +111,19 @@ void wait() {
    return;
 }
 
-
 //   body
 void mainMenu() {
 
    output.title("MAIN MENU", true);
    cout << "Welcome to the main menu! What would you like to do?" << endl;
+   cout << "[1] Gambling games (18+)" << endl;
    cout << "[0] Exit the programmone :(" << endl;
    INT_CHOICE = input.integer("> ");
 
-
    switch (INT_CHOICE) {
+   case 1:
+      gamblingMenu();
+      break;
    case 0:
       output.pure("Bye bye, come back soon!");
       return;
@@ -129,8 +136,18 @@ void mainMenu() {
 
 }
 
+void gamblingMenu() {
+   output.title("Are you 18 or older? (yes/no)", true);
+   if (input.letters("> ") != "yes") {
+      output.pure("You'll be redirected to the main menu");
+      mainMenu();
+      return;
+   }
+   output.title("GAMBLING MENU", true);
+}
 // main
 int main() {
+   PAUSE();
    mainMenu();
 
    return 0;
