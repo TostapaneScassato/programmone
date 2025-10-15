@@ -43,13 +43,13 @@ void gamblingMenu(bool skipAgeCheck=false);
 // functions
 //   utilities
 
-class OUTPUT {
+class CUSTOM_OUTPUT {
 public:
    void error(string parameter) {
       cerr << "[error] " << parameter;
       wait();
    }
-   void title(string parameter, bool clear) {
+   void title(string parameter, bool clear=true) {
       if (clear) CLEAR();
       cout << "O";
       for (int i=0; i < parameter.length()*2 + 5; i++) cout << "-";
@@ -69,7 +69,9 @@ public:
       if (DEBUG_MODE) cout << "[debug] " << parameter << endl;
    }
 };
-class INPUT {
+CUSTOM_OUTPUT output;
+
+class CUSTOM_INPUT {
 public:
    int integer(string request) {
       float real;
@@ -98,7 +100,9 @@ public:
       return STRING_CHOICE;
    }
 };
-class GAMBLING {
+CUSTOM_INPUT input;
+
+class CUSTOM_GAMBLING {
 public:
    class RANDOM {
    public:
@@ -114,12 +118,9 @@ public:
          return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
       }
    };
+   CUSTOM_GAMBLING::RANDOM randomGenerator;
 };
-//     global object
-OUTPUT output;
-INPUT input;
-GAMBLING gambling;
-GAMBLING::RANDOM randomGenerator;
+CUSTOM_GAMBLING gambling;
 
 void wait() {
    cerr << ".";
@@ -134,7 +135,7 @@ void wait() {
 //   body
 void mainMenu() {
 
-   output.title("MAIN MENU", true);
+   output.title("MAIN MENU");
    cout << "Welcome to the main menu! What would you like to do?" << endl;
    cout << "[1] Gambling games (18+)" << endl;
    cout << "[0] Exit the programmone :(" << endl;
@@ -158,7 +159,7 @@ void mainMenu() {
 
 void gamblingMenu(bool skipAgeCheck) {
    if (!skipAgeCheck) {
-      output.title("Are you 18 or older? (yes/no)", true);
+      output.title("Are you 18 or older? (yes/no)");
       if (input.letters("> ") != "yes") {
          output.pure("You'll be redirected to the main menu");
          mainMenu();
@@ -166,7 +167,7 @@ void gamblingMenu(bool skipAgeCheck) {
       }
    }
    
-   output.title("GAMBLING MENU", true);
+   output.title("GAMBLING MENU");
    cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
    cout << "[0] Go back to the main menu." << endl;
    INT_CHOICE = input.integer("> ");
