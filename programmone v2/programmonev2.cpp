@@ -1959,4 +1959,5 @@ int main() {    //main
     return 0;
 }
 
-// Programmone V2 creato interamente da Carletti Stefano. Ogni copia deve essere esplicitamente approvata da quest'ultimo!
+// Programmone V2 creato interamente da Carletti Stefano.
+// Copyright (c) Carletti Stefano - 2025
