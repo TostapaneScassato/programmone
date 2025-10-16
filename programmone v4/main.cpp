@@ -1,5 +1,7 @@
 #include <iostream>
 #include <time.h>
+#include <algorithm>
+#include <iterator>
 using namespace std;
 #define PROGRAMMONE_VERSION 4
 
@@ -254,6 +256,64 @@ public:
          return;
       }
    }
+   void roulette() {
+      int redNumbers[] = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36};
+
+      output.title("ROULETTE");
+      cout << "What type of bet would you like to do?" << endl;
+      cout << "(a) Reds, Blacks or Green        [1-2-3]" << endl;
+      cout << "(b) Evens or Odds                [4-5]" << endl;
+      cout << "(c) Halves (1-18. 19-36)         [6-7]" << endl;
+      cout << "(d) Thirds (1-12. 13-24. 25-36)  [8-9-10]" << endl;
+      cout << "(e) Single number                [11]" << endl;
+      INT_CHOICE = input.integer("> ");
+
+      int generatedNumber = randomGenerator.integer(0, 36);
+
+      if (INT_CHOICE == 1 && find(begin(redNumbers), end(redNumbers), generatedNumber) != end(redNumbers)) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 2 && find(begin(redNumbers), end(redNumbers), generatedNumber) == end(redNumbers)) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 3 && generatedNumber == 0) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      
+      else if (INT_CHOICE == 4 && generatedNumber%2 == 0) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 5 && generatedNumber%2 != 0) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      
+      else if (INT_CHOICE == 6 && generatedNumber > 0 && generatedNumber < 19) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 7 && generatedNumber > 18) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+
+      else if (INT_CHOICE == 8 && generatedNumber > 0 && generatedNumber < 13) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 9 && generatedNumber > 12 && generatedNumber < 25) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+      else if (INT_CHOICE == 10 && generatedNumber > 24) cout << "The number is " << generatedNumber << ", You Win!" << endl;
+
+      else if (INT_CHOICE == 11) {
+         do {
+            cout << endl << "Please insert the number you'd like to bet on: "; 
+
+            int numberBet = input.integer("");
+
+            if (numberBet < 0 || numberBet > 36) {
+               output.error("Please choose a valid number (0-36)");
+               continue;
+            } else if (numberBet == generatedNumber) {
+               cout << "The number you choose was the correct one. You Win!" << endl;
+               break;
+            } else {
+               cout << "The number was " << generatedNumber << ". You Lose!" << endl;
+               break;
+            }
+         } while (true);
+
+      } else if (INT_CHOICE < 12 && INT_CHOICE > 0) {
+         cout << "The number was " << generatedNumber << ". You Lose!" << endl;
+      } else {
+         output.error("Please choose a valid option");
+         roulette();
+         return;
+      }
+
+      output.pure("You'll be redirected to the gambling menu");
+      PAUSE();
+      gamblingMenu(true);
+   }
 };
 CUSTOM_GAMBLING gambling;
 
@@ -305,7 +365,8 @@ void gamblingMenu(bool skipAgeCheck) {
    
    output.title("GAMBLING MENU");
    cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
-   cout << "[1] Blackjack." << endl;
+   cout << "[1] Blackjack" << endl;
+   cout << "[2] Roulette" << endl;
    cout << "[0] Go back to the main menu." << endl;
    INT_CHOICE = input.integer("> ");
 
@@ -316,6 +377,9 @@ void gamblingMenu(bool skipAgeCheck) {
       break;
    case 1:
       gambling.blackjack();
+      break;
+   case 2:
+      gambling.roulette();
       break;
    default:
       output.error("Please insert a correct option");
