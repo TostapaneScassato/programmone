@@ -42,6 +42,7 @@ string STRING_CHOICE;
 // prototypes
 void wait();
 void gamblingMenu(bool skipAgeCheck=false);
+void credits();
 
 // functions
 //   utilities
@@ -334,12 +335,16 @@ void mainMenu() {
    output.title("MAIN MENU");
    cout << "Welcome to the main menu! What would you like to do?" << endl;
    cout << "[1] Gambling games (18+)" << endl;
+   cout << "[9] Credits" << endl;
    cout << "[0] Exit the programmone :(" << endl;
    INT_CHOICE = input.integer("> ");
 
    switch (INT_CHOICE) {
    case 1:
       gamblingMenu();
+      break;
+   case 9:
+      credits();
       break;
    case 0:
       output.pure("Bye bye, come back soon!");
@@ -386,6 +391,27 @@ void gamblingMenu(bool skipAgeCheck) {
       gamblingMenu(true);
       break;
    }
+}
+
+void credits() {
+   output.title("CREDITS");
+   
+   cout << "Developers:" << endl;
+   cout << "   Programmers:  - - - - - Carletti Stefano" << endl;
+   cout << "   Project Manager:  - - - Carletti Stefano" << endl;
+   cout << "   Code Testers: - - - - - Carletti Stefano" << endl;
+   cout << "                         \\ Costi Matteo" << endl;
+   cout << "                         \\ Fazioli Aurora" << endl;
+   cout << "                         \\ Trotta Simone" << endl;
+   cout << "Honourable Mentions:" << endl;
+   cout << "   Trotta Simone:  - - - - original idea of a giant program that includes a lot of gambling games togheter" << endl;
+   cout << "   Capa Suprema: - - - - - financer of the programmers' computer" << endl;
+   cout << "   Di Salvo Giulia:  - - - without her boring lessons, we would have never even started this project" << endl;
+   cout << "   Holy trinity: - - - - - programmers' moral support" << endl << endl;
+   cout << "Copyright (c) Stefano Carletti - 2025 -- MIT License" << endl << endl;
+   PAUSE();
+   mainMenu();
+   return;
 }
 
 // main
