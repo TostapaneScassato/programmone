@@ -60,10 +60,44 @@ public:
 
       return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
    }
+   char character(char rangeMinimum, char rangeMaximum) {
+
+      if (rangeMaximum < rangeMinimum) {
+         char temp;
+         temp = rangeMinimum;
+         rangeMinimum = rangeMaximum;
+         rangeMaximum = temp;
+      }
+
+      return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
+   }
+   int playingCard(int forceMark=-1, int forceSuit=-1) {
+      int suit, value;
+
+      (forceMark != -1)? value = forceMark : value = integer(1, 13);
+      (forceSuit != -1)? suit = forceSuit : suit = character('A', 'D');
+
+      if (suit == 'A') value += 100;      // spades
+      else if (suit == 'B') value += 200; // clubs
+      else if (suit == 'C') value += 300; // hearts
+      else value += 400;                  // diamonds
+
+      return value;
+   }
 };
 RANDOM randomGenerator;
 
 class CUSTOM_OUTPUT {
+private:
+   void printCardValue(int value, bool hidden) {
+      if (hidden) cout << "??";
+      else if (value == 1) cout << " A";
+      else if (value == 11) cout << " J";
+      else if (value == 12) cout << " Q";
+      else if (value == 13) cout << " K";
+      else if (value < 10) cout << "0" << value;
+      else cout << value;
+   }
 public:
    void error(string parameter) {
       cerr << "[error] " << parameter;
@@ -88,35 +122,36 @@ public:
    void debug(string parameter) {
       if (DEBUG_MODE) cout << "[debug] " << parameter << endl;
    }
-   int randomPlayingCard(bool multiple=false, int howManyPresent=0, bool hidden=false, int forceValue=-1) {
-      int value;
-      
-      (forceValue != -1)? value = forceValue : value = randomGenerator.integer(1, 13);
+   void playingCard(int value, bool multiple=false, int howManyPresent=0, bool hidden=false) {
+      int mark;
+      char suit;
+
+      if (value > 400) {
+         mark = value - 400;
+         suit = 'D';
+      } else if (value > 300) {
+         mark = value - 300;
+         suit = 'H';
+      } else if (value > 200) {
+         mark = value - 200;
+         suit = 'C';
+      } else {
+         mark = value - 100;
+         suit = 'S';
+      }
 
       if (multiple) {
          cout << "\033[5A"; // move up 5 rows
          cout << "\033[" << howManyPresent*7 << "C"; // move right 7 columns for every card present
       }
 
-      cout << "O----O"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
-      cout << "|    |"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
-      cout << "| ";
-
-      if (hidden) cout << "??";
-      else if (value == 1) cout << " A";
-      else if (value == 11) cout << " J";
-      else if (value == 12) cout << " Q";
-      else if (value == 13) cout << " K";
-      else if (value < 10) cout << "0" << value;
-      else cout << value;
-      
-      cout << " |"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
-      cout << "|    |"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
+      cout << "O----O"; (multiple)? cout << "\033[B \033[7D" : cout << endl;                           //  O------O
+      cout << "|" << suit << "  " << suit << "|"; (multiple)? cout << "\033[B \033[7D" : cout << endl; //  | S  S |
+      cout << "| ";                                                                                    //  |  VV  |
+      printCardValue(mark, hidden);                                                                    //  | S  S |
+      cout << " |"; (multiple)? cout << "\033[B \033[7D" : cout << endl;                               //  O------O
+      cout << "|" << suit << "  " << suit << "|"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
       cout << "O----O" << endl;
-      
-      if (value > 10) value = 10;
-
-      return value;
    }
 };
 CUSTOM_OUTPUT output;
@@ -153,23 +188,53 @@ public:
 CUSTOM_INPUT input;
 
 class CUSTOM_GAMBLING {
+private:
+   int  getCardRank(int value, bool maxTen=false) {
+      int rank;
+
+      if (value > 400) rank = value - 400;
+      else if (value > 300) rank = value - 300;
+      else if (value > 200) rank = value - 200;
+      else if (value > 100) rank = value - 100;
+
+      if (maxTen && rank > 10) rank = 10;
+      return rank;
+   }
+   char getCardSuit(int value) {
+      char suit;
+
+      if (value > 400) suit = 'D';
+      if (value > 300) suit = 'H';
+      if (value > 200) suit = 'C';
+      if (value > 100) suit = 'S';
+
+      return suit;
+   }
 public:
    void blackjack() {
+
+      playedCards[0][0] = randomGenerator.playingCard();
+      playedCards[0][1] = randomGenerator.playingCard();
+      int currentDealerCards = 2;
+      int currentDealerValue = getCardRank(playedCards[0][0], true) + getCardRank(playedCards[0][1], true);
+
+      playedCards[1][0] = randomGenerator.playingCard();
+      playedCards[1][1] = randomGenerator.playingCard();
+      int currentPlayersCards = 2;
+      int currentPlayerValue = getCardRank(playedCards[1][0], true) + getCardRank(playedCards[1][1], true);
       
       output.title("BLACKJACK");
       cout << "The dealer's cards are:" << endl;
-      playedCards[0][0] = output.randomPlayingCard();
-      playedCards[0][1] = output.randomPlayingCard(true, 1, true); // second hidden card
+
+      output.playingCard(playedCards[0][0]);
+      output.playingCard(playedCards[0][1], true, 1, true);
       
-      int currentDealerCards = 2;
-      int currentDealerValue = playedCards[0][0] + playedCards[0][1];
       
       cout << endl << "Your cards are:" << endl;
-      playedCards[1][0] = output.randomPlayingCard();
-      playedCards[1][1] = output.randomPlayingCard(true, 1);
+
+      output.playingCard(playedCards[1][0]);
+      output.playingCard(playedCards[1][1], true, 1);
       
-      int currentPlayersCards = 2;
-      int currentPlayerValue = playedCards[1][0] + playedCards[1][1];
       
       do {
          cout << endl << "Would you like to draw another card or stand? (1|2): ";
@@ -181,33 +246,37 @@ public:
                continue;
             }
 
-            output.randomPlayingCard(false, 0, false, playedCards[1][0]);
+            output.playingCard(playedCards[1][0]);
    
             for (int i = 1; i < currentPlayersCards; i++) {
-               output.randomPlayingCard(true, i, false, playedCards[1][i]); // re-print old cards
+               output.playingCard(playedCards[1][i], true, i); // reprint old cards
             }
-   
-            playedCards[1][currentPlayersCards] = output.randomPlayingCard(true, currentPlayersCards, false);
-            currentPlayerValue += playedCards[1][currentPlayersCards];
+
+            playedCards[1][currentPlayersCards] = randomGenerator.playingCard();
+            output.playingCard(playedCards[1][currentPlayersCards], true, currentPlayersCards);
+
+            currentPlayerValue += getCardRank(playedCards[1][currentPlayersCards], true);
             currentPlayersCards++;
 
          } else if (INT_CHOICE == 2) {
             cout << endl << "Your count is " << currentPlayerValue << endl;
             cout << "The dealer's cards are:" << endl;
             
-            output.randomPlayingCard(false, 0, false, playedCards[0][0]);
-            output.randomPlayingCard(true, 1, false, playedCards[0][1]);
+            output.playingCard(playedCards[0][0]);
+            output.playingCard(playedCards[0][1], true, 1);
 
             while (currentDealerValue < 17) {
                cout << endl << "The dealer's value is less than 17, he draws a card." << endl;
 
-               output.randomPlayingCard(false, 0, false, playedCards[0][0]);
+               output.playingCard(playedCards[0][0]);
    
                for (int i = 1; i < currentDealerCards; i++) {
-                  output.randomPlayingCard(true, i, false, playedCards[0][i]); // re-print old cards
+                  output.playingCard(playedCards[0][i], true, i); // reprint old cards
                }
-               playedCards[0][currentDealerCards] = output.randomPlayingCard(true, currentDealerCards, false);
-               currentDealerValue += playedCards[0][currentDealerCards];
+               playedCards[0][currentDealerCards] = randomGenerator.playingCard();
+               output.playingCard(playedCards[0][currentDealerCards], true, currentDealerCards);
+
+               currentDealerValue += getCardRank(playedCards[0][currentDealerCards], true);
                currentDealerCards++;
             }
             break;
@@ -416,7 +485,7 @@ void credits() {
 
 // main
 int main() {
-   //PAUSE();
+   PAUSE();
    srand(time(NULL));
    mainMenu();
 
