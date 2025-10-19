@@ -35,7 +35,7 @@ using namespace std;
 
 // global variables
 bool DEBUG_MODE = false;
-int INT_CHOICE;
+int INT_CHOICE, INT_CHOICE_2;
 int playedCards[2][18]; // row 0 for dealer. row 1 for player
 string STRING_CHOICE;
 
@@ -122,9 +122,10 @@ public:
    void debug(string parameter) {
       if (DEBUG_MODE) cout << "[debug] " << parameter << endl;
    }
-   void playingCard(int value, bool multiple=false, int howManyPresent=0, bool hidden=false) {
+   void playingCard(int value, int howManyPresent=0, bool hidden=false) {
       int mark;
       char suit;
+      bool multiple = howManyPresent != 0;
 
       if (value > 400) {
          mark = value - 400;
@@ -145,6 +146,8 @@ public:
          cout << "\033[" << howManyPresent*7 << "C"; // move right 7 columns for every card present
       }
 
+      if (hidden) suit = ' ';
+
       cout << "O----O"; (multiple)? cout << "\033[B \033[7D" : cout << endl;                           //  O------O
       cout << "|" << suit << "  " << suit << "|"; (multiple)? cout << "\033[B \033[7D" : cout << endl; //  | S  S |
       cout << "| ";                                                                                    //  |  VV  |
@@ -152,6 +155,10 @@ public:
       cout << " |"; (multiple)? cout << "\033[B \033[7D" : cout << endl;                               //  O------O
       cout << "|" << suit << "  " << suit << "|"; (multiple)? cout << "\033[B \033[7D" : cout << endl;
       cout << "O----O" << endl;
+   }
+   void attention(string parameter) {
+      cout << "[attention] " << parameter;
+      wait();
    }
 };
 CUSTOM_OUTPUT output;
@@ -204,9 +211,9 @@ private:
       char suit;
 
       if (value > 400) suit = 'D';
-      if (value > 300) suit = 'H';
-      if (value > 200) suit = 'C';
-      if (value > 100) suit = 'S';
+      else if (value > 300) suit = 'H';
+      else if (value > 200) suit = 'C';
+      else if (value > 100) suit = 'S';
 
       return suit;
    }
@@ -227,13 +234,13 @@ public:
       cout << "The dealer's cards are:" << endl;
 
       output.playingCard(playedCards[0][0]);
-      output.playingCard(playedCards[0][1], true, 1, true);
+      output.playingCard(playedCards[0][1], 1, true);
       
       
       cout << endl << "Your cards are:" << endl;
 
       output.playingCard(playedCards[1][0]);
-      output.playingCard(playedCards[1][1], true, 1);
+      output.playingCard(playedCards[1][1], 1);
       
       
       do {
@@ -249,7 +256,7 @@ public:
             output.playingCard(playedCards[1][0]);
    
             for (int i = 1; i < currentPlayersCards; i++) {
-               output.playingCard(playedCards[1][i], true, i); // reprint old cards
+               output.playingCard(playedCards[1][i], i); // reprint old cards
             }
 
             playedCards[1][currentPlayersCards] = randomGenerator.playingCard();
@@ -263,7 +270,7 @@ public:
             cout << "The dealer's cards are:" << endl;
             
             output.playingCard(playedCards[0][0]);
-            output.playingCard(playedCards[0][1], true, 1);
+            output.playingCard(playedCards[0][1], 1);
 
             while (currentDealerValue < 17) {
                cout << endl << "The dealer's value is less than 17, he draws a card." << endl;
@@ -271,10 +278,10 @@ public:
                output.playingCard(playedCards[0][0]);
    
                for (int i = 1; i < currentDealerCards; i++) {
-                  output.playingCard(playedCards[0][i], true, i); // reprint old cards
+                  output.playingCard(playedCards[0][i], i); // reprint old cards
                }
                playedCards[0][currentDealerCards] = randomGenerator.playingCard();
-               output.playingCard(playedCards[0][currentDealerCards], true, currentDealerCards);
+               output.playingCard(playedCards[0][currentDealerCards], currentDealerCards);
 
                currentDealerValue += getCardRank(playedCards[0][currentDealerCards], true);
                currentDealerCards++;
@@ -384,6 +391,63 @@ public:
       PAUSE();
       gamblingMenu(true);
    }
+   void poker() {
+
+      for (int i=0; i<5; i++) {playedCards[0][i] = randomGenerator.playingCard();} // generate dealer's cards
+      for (int i=0; i<5; i++) {playedCards[1][i] = randomGenerator.playingCard();} // generate player's cards
+      
+      output.title("POKER");
+      
+      cout << "Dealer's cards:" << endl;
+
+      for (int i=0; i<5; i++) {output.playingCard(playedCards[0][i], i, true);}
+
+      cout << endl << "Your cards:" << endl;
+
+      for (int i=0; i<5; i++) {output.playingCard(playedCards[1][i], i);}
+
+      cout << endl << "How many cards would you like to discard? (0-5)" << endl;
+      do {
+         INT_CHOICE = input.integer("> ");
+
+         if (INT_CHOICE < 0 || INT_CHOICE > 5) {
+            output.error("You can only discard 0-5 cards");
+            continue;
+         } else break;
+      } while (true);
+      
+      int tempArray[] = {1, 2, 3, 4, 5};
+
+      for (int i = 0; i < INT_CHOICE; i++) {
+         cout << "What card would you like to discard? (1-5)" << endl;
+         INT_CHOICE_2 = input.integer("> ") - 1; // in arrays the numbers start from 0
+
+         if (tempArray[INT_CHOICE_2] == 0) {
+            output.error("Sorry, you already discarded that card");
+            i--;
+            continue;
+         }
+
+         playedCards[1][INT_CHOICE_2] = randomGenerator.playingCard();
+         tempArray[INT_CHOICE_2] = 0;
+      }
+
+      // now it's the dealer's turn
+
+      bool hasRoyalFlush, hasStraightFlush, hasPoker, hasFullHouse, hasFlush, hasStraight, hasThreeOfaKind, hasTwoPair, hasPair;
+
+
+      
+      output.title("POKER");
+      
+      cout << "Dealer's cards:" << endl;
+
+      for (int i=0; i<5; i++) {output.playingCard(playedCards[0][i], i);}
+
+      cout << endl << "Your cards now are:" << endl;
+
+      for (int i=0; i<5; i++) {output.playingCard(playedCards[1][i], i);}
+   }
 };
 CUSTOM_GAMBLING gambling;
 
@@ -441,6 +505,7 @@ void gamblingMenu(bool skipAgeCheck) {
    cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
    cout << "[1] Blackjack" << endl;
    cout << "[2] Roulette" << endl;
+   cout << "[3] Poker" << endl;
    cout << "[0] Go back to the main menu." << endl;
    INT_CHOICE = input.integer("> ");
 
@@ -454,6 +519,11 @@ void gamblingMenu(bool skipAgeCheck) {
       break;
    case 2:
       gambling.roulette();
+      break;
+   case 3:
+      output.attention("work in progress");
+      //gambling.poker();
+      gamblingMenu(true);
       break;
    default:
       output.error("Please insert a correct option");
@@ -485,7 +555,7 @@ void credits() {
 
 // main
 int main() {
-   PAUSE();
+   //PAUSE();
    srand(time(NULL));
    mainMenu();
 
