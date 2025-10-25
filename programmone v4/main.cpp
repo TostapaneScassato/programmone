@@ -217,7 +217,30 @@ private:
 
       return suit;
    }
-public:
+   void checkPokerHand(string player_dealer) {
+      int sameSuit_spades=0, sameSuit_clubs=0, sameSuit_hearts=0, sameSuit_diamonds=0;
+      int e = -1;
+
+      if (player_dealer == "player") e = 1;
+      else if (player_dealer == "dealer") e = 0;
+
+      for (int i = 0; i < 5; i++) {
+
+         if (getCardSuit(playedCards[e][i]) == 'S') sameSuit_spades++;
+         else if (getCardSuit(playedCards[e][i]) == 'C') sameSuit_clubs++;
+         else if (getCardSuit(playedCards[e][i]) == 'H') sameSuit_hearts++;
+         else if (getCardSuit(playedCards[e][i]) == 'D') sameSuit_diamonds++;
+      }
+
+      int temp[5];
+      for (int i=0; i<5; i++) temp[i] = playedCards[e][i];
+      sort(temp, temp+5);
+
+      bool continuous=true;
+      for (int i=1; i<5; i++) if (temp[i] != temp[i-1]) continuous = false;
+
+   };
+   public:
    void blackjack() {
 
       playedCards[0][0] = randomGenerator.playingCard();
@@ -432,11 +455,7 @@ public:
          tempArray[INT_CHOICE_2] = 0;
       }
 
-      // now it's the dealer's turn
-
-      bool hasRoyalFlush, hasStraightFlush, hasPoker, hasFullHouse, hasFlush, hasStraight, hasThreeOfaKind, hasTwoPair, hasPair;
-
-
+      // update the player's cards and show the dealer's cards      
       
       output.title("POKER");
       
@@ -445,8 +464,14 @@ public:
       for (int i=0; i<5; i++) {output.playingCard(playedCards[0][i], i);}
 
       cout << endl << "Your cards now are:" << endl;
-
+      
       for (int i=0; i<5; i++) {output.playingCard(playedCards[1][i], i);}
+
+      // dealer discards cards?
+
+      bool hasRoyalFlush=0, hasStraightFlush=0, hasPoker=0, hasFullHouse=0, hasFlush=0, hasStraight=0, hasThreeOfaKind=0, hasTwoPair=0, hasPair=0;
+
+      
    }
 };
 CUSTOM_GAMBLING gambling;
