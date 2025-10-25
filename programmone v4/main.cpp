@@ -473,6 +473,155 @@ private:
 
       
    }
+   void baccarat() {
+      output.title("BACCARAT");
+      // for this game, the banker will use the dealer's cards, even though it is NOT a dealer
+
+      int bet = 0;
+      int bankerScore=0, playerScore=0;
+
+      playedCards[0][0] = randomGenerator.playingCard();
+      playedCards[0][1] = randomGenerator.playingCard();
+
+      if (getCardRank(playedCards[0][0]) < 10)
+         bankerScore += getCardRank(playedCards[0][0]);
+
+      if (getCardRank(playedCards[0][1]) > 10)
+         bankerScore += getCardRank(playedCards[0][1]);
+
+      while (bankerScore >= 10) bankerScore -= 10;
+
+
+      playedCards[1][0] = randomGenerator.playingCard();
+      playedCards[1][1] = randomGenerator.playingCard();
+
+      if (getCardRank(playedCards[1][0]) > 10)
+         playerScore += getCardRank(playedCards[1][0]);
+
+      if (getCardRank(playedCards[1][1]) > 10)
+         playerScore += getCardRank(playedCards[1][1]);
+
+      while (playerScore >= 10) playerScore -= 10;
+
+
+      cout << "Would you like to bet on the player, the banker or both? (1|2|3): ";
+      INT_CHOICE = input.integer("");
+
+      if (INT_CHOICE == 1) bet = 100;
+      else if (INT_CHOICE == 2) bet = 200;
+      else if (INT_CHOICE == 3) bet = 300;
+      else {
+         output.error("Please choose a valid bet");
+         baccarat();
+      }
+
+      cout << endl << "The banker's cards are:" << endl;
+      output.playingCard(playedCards[0][0]);
+      output.playingCard(playedCards[0][1], 1);
+      cout << "And his current score is: " << bankerScore << endl;
+
+      cout << endl << "The player's cards are:" << endl;
+      output.playingCard(playedCards[1][0]);
+      output.playingCard(playedCards[1][1], 1);
+      cout << "And his current score is: " << playerScore << endl << endl;
+
+      if ((playerScore == 8 || playerScore == 9) && (bankerScore == 8 || bankerScore == 9)) {
+         cout << "Both the banker and the player obtained a natural win!" << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+
+      } else if (playerScore == 8 || playerScore == 9) {
+         cout << "The player obtained a natural win! You "; (bet == 100 || bet == 300)? cout << "won!" : cout << "lost!"; cout << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+
+      } else if (bankerScore == 8 || bankerScore == 9) {
+         cout << "The banker obtained a natural win! You "; (bet == 200 || bet == 300)? cout << "won!" : cout << "lost!"; cout << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+
+      } else {
+         cout << "No one obtained a natural win" << endl;
+         PAUSE();
+      }
+
+      bool playerDraws=false;
+      if (playerScore < 6) { // player draws another card
+
+         playedCards[1][2] = randomGenerator.playingCard();
+
+         if (getCardRank(playedCards[1][2]) > 10)
+            playerScore += getCardRank(playedCards[1][2]);
+
+         while (playerScore >= 10) playerScore -= 10;
+
+         playerDraws = true;
+      }
+
+      // calculate banker's move
+      bool bankerDraws=false;
+
+      if (playerDraws) {
+         if (playerScore == 8 && bankerScore <= 2) bankerDraws = true;
+         else if ((playerScore == 6 || playerScore == 7) && bankerScore <= 6) bankerDraws = true;
+         else if ((playerScore == 4 || playerScore == 5) && bankerScore <= 5) bankerDraws = true;
+         else if ((playerScore == 2 || playerScore == 3) && bankerScore <= 4) bankerDraws = true;
+         else if ((playerScore ==10 || playerScore == 9) && bankerScore <= 3) bankerDraws = true;
+
+      } else if (bankerScore <= 5) bankerDraws = true;
+
+      if (bankerDraws) {
+         playedCards[0][2] = randomGenerator.playingCard();
+
+         if (getCardRank(playedCards[0][2]) > 10)
+            bankerScore += getCardRank(playedCards[0][2]);
+
+         while (bankerScore >= 10) bankerScore -= 10;
+      }
+
+      // print the end results
+      output.title("BACCARAT");
+
+      cout << endl << "The banker's final cards are:" << endl;
+      output.playingCard(playedCards[0][0]);
+      output.playingCard(playedCards[0][1], 1);
+      if (bankerDraws) output.playingCard(playedCards[0][2], 2);
+      cout << "and his final score is " << bankerScore << endl;
+
+      cout << endl << "The player's final cards are:" << endl;
+      output.playingCard(playedCards[1][0]);
+      output.playingCard(playedCards[1][1], 1);
+      if (playerDraws) output.playingCard(playedCards[1][2], 2);
+      cout << "and his final score is " << playerScore << endl << endl;
+
+      if (playerScore > bankerScore) {
+         cout << "The player obtained higher score! You "; (bet == 100 || bet == 300)? cout << "won!" : cout << "lost!"; cout << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+
+      } else if (bankerScore > playerScore) {
+         cout << "The banker obtained a higher score! You "; (bet == 200 || bet == 300)? cout << "won!" : cout << "lost!"; cout << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+
+      } else {
+         cout << "It's a tie! You "; (bet == 300)? cout << "won!" : cout << "lost!"; cout << endl;
+         output.pure("You'll be redirected to the gambling menu");
+         PAUSE();
+         gamblingMenu(true);
+         return;
+      }
+   }
 };
 CUSTOM_GAMBLING gambling;
 
@@ -536,6 +685,7 @@ void gamblingMenu(bool skipAgeCheck) {
    cout << "[1] Blackjack" << endl;
    cout << "[2] Roulette" << endl;
    cout << "[3] Poker" << endl;
+   cout << "[4] Baccarat" << endl;
    cout << "[0] Go back to the main menu." << endl;
    INT_CHOICE = input.integer("> ");
 
@@ -554,6 +704,9 @@ void gamblingMenu(bool skipAgeCheck) {
       output.attention("work in progress");
       //gambling.poker();
       gamblingMenu(true);
+      break;
+   case 4:
+      gambling.baccarat();
       break;
    default:
       output.error("Please insert a correct option");
