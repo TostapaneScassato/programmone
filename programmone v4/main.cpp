@@ -525,6 +525,11 @@ void gamblingMenu(bool skipAgeCheck) {
          return;
       }
    }
+
+   for(int i=0; i<18; i++) {
+      playedCards[0][i] = 0;
+      playedCards[1][i] = 0;
+   }
    
    output.title("GAMBLING MENU");
    cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
