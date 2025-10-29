@@ -125,7 +125,7 @@ public:
    void playingCard(int value, int howManyPresent=0, bool hidden=false) {
       int mark;
       char suit;
-      bool multiple = howManyPresent != 0;
+      bool multiple = (howManyPresent != 0);
 
       if (value > 400) {
          mark = value - 400;
@@ -283,7 +283,7 @@ private:
             }
 
             playedCards[1][currentPlayersCards] = randomGenerator.playingCard();
-            output.playingCard(playedCards[1][currentPlayersCards], true, currentPlayersCards);
+            output.playingCard(playedCards[1][currentPlayersCards], currentPlayersCards);
 
             currentPlayerValue += getCardRank(playedCards[1][currentPlayersCards], true);
             currentPlayersCards++;
@@ -486,7 +486,7 @@ private:
       if (getCardRank(playedCards[0][0]) < 10)
          bankerScore += getCardRank(playedCards[0][0]);
 
-      if (getCardRank(playedCards[0][1]) > 10)
+      if (getCardRank(playedCards[0][1]) < 10)
          bankerScore += getCardRank(playedCards[0][1]);
 
       while (bankerScore >= 10) bankerScore -= 10;
@@ -495,10 +495,10 @@ private:
       playedCards[1][0] = randomGenerator.playingCard();
       playedCards[1][1] = randomGenerator.playingCard();
 
-      if (getCardRank(playedCards[1][0]) > 10)
+      if (getCardRank(playedCards[1][0]) < 10)
          playerScore += getCardRank(playedCards[1][0]);
 
-      if (getCardRank(playedCards[1][1]) > 10)
+      if (getCardRank(playedCards[1][1]) < 10)
          playerScore += getCardRank(playedCards[1][1]);
 
       while (playerScore >= 10) playerScore -= 10;
@@ -556,7 +556,7 @@ private:
 
          playedCards[1][2] = randomGenerator.playingCard();
 
-         if (getCardRank(playedCards[1][2]) > 10)
+         if (getCardRank(playedCards[1][2]) < 10)
             playerScore += getCardRank(playedCards[1][2]);
 
          while (playerScore >= 10) playerScore -= 10;
@@ -579,7 +579,7 @@ private:
       if (bankerDraws) {
          playedCards[0][2] = randomGenerator.playingCard();
 
-         if (getCardRank(playedCards[0][2]) > 10)
+         if (getCardRank(playedCards[0][2]) < 10)
             bankerScore += getCardRank(playedCards[0][2]);
 
          while (bankerScore >= 10) bankerScore -= 10;
