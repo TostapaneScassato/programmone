@@ -240,7 +240,7 @@ private:
       for (int i=1; i<5; i++) if (temp[i] != temp[i-1]) continuous = false;
 
    };
-   public:
+public:
    void blackjack() {
 
       playedCards[0][0] = randomGenerator.playingCard();
