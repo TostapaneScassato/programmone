@@ -51,23 +51,13 @@ class RANDOM {
 public:
    int integer(int rangeMinimum, int rangeMaximum) {
 
-      if (rangeMaximum < rangeMinimum) {
-         int temp;
-         temp = rangeMinimum;
-         rangeMinimum = rangeMaximum;
-         rangeMaximum = temp;
-      }
+      if (rangeMaximum < rangeMinimum) swap(rangeMinimum, rangeMaximum);
 
       return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
    }
    char character(char rangeMinimum, char rangeMaximum) {
 
-      if (rangeMaximum < rangeMinimum) {
-         char temp;
-         temp = rangeMinimum;
-         rangeMinimum = rangeMaximum;
-         rangeMaximum = temp;
-      }
+      if (rangeMaximum < rangeMinimum) swap(rangeMinimum, rangeMaximum);
 
       return rand()%(rangeMaximum - rangeMinimum + 1) + rangeMinimum;
    }
