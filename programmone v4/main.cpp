@@ -684,8 +684,8 @@ void gamblingMenu(bool skipAgeCheck) {
    cout << "Welcome to the gambling menu, what game would you like to play?" << endl;
    cout << "[1] Blackjack" << endl;
    cout << "[2] Roulette" << endl;
-   cout << "[3] Poker" << endl;
-   cout << "[4] Baccarat" << endl;
+   cout << "[3] Baccarat" << endl;
+   //cout << "[4] Poker" << endl;
    cout << "[0] Go back to the main menu." << endl;
    INT_CHOICE = input.integer("> ");
 
@@ -701,13 +701,15 @@ void gamblingMenu(bool skipAgeCheck) {
       gambling.roulette();
       break;
    case 3:
+      gambling.baccarat();
+      break;
+   /*
+   case 4:
       output.attention("work in progress");
       //gambling.poker();
       gamblingMenu(true);
       break;
-   case 4:
-      gambling.baccarat();
-      break;
+   */
    default:
       output.error("Please insert a correct option");
       gamblingMenu(true);
