@@ -286,6 +286,7 @@ public:
             output.playingCard(playedCards[0][1], 1);
 
             while (currentDealerValue < 17) {
+               SLEEP(500);
                cout << endl << "The dealer's value is less than 17, he draws a card." << endl;
 
                output.playingCard(playedCards[0][0]);
@@ -302,6 +303,7 @@ public:
             break;
          }
       } while (true);
+      SLEEP(500);
 
       cout << endl;
       output.title("results", false);
@@ -310,7 +312,7 @@ public:
       cout << "Dealer's total value: " << currentDealerValue << endl << endl;
 
       if (currentPlayerValue > 21) {
-         cout << "You went over 21. You Lose!" << endl;
+         cout << "You went over 21. You Lose!" << endl << endl;
          output.pure("You'll be redirected to the gambling menu");
          PAUSE();
          gamblingMenu(true);
@@ -319,7 +321,7 @@ public:
       else if (currentPlayerValue == 21) cout << "You have a Blackjack!" << endl;
 
       if (currentDealerValue > 21) {
-         cout << "The dealer went over 21. You Win!" << endl;
+         cout << "The dealer went over 21. You Win!" << endl << endl;
          output.pure("You'll be redirected to the gambling menu");
          PAUSE();
          gamblingMenu(true);
@@ -327,19 +329,19 @@ public:
       }
 
       if (currentPlayerValue > currentDealerValue) {
-         cout << "Your value is higher. You Win!" << endl;
+         cout << "Your value is higher. You Win!" << endl << endl;
          output.pure("You'll be redirected to the gambling menu");
          PAUSE();
          gamblingMenu(true);
          return;
       } else if (currentPlayerValue < currentDealerValue) {
-         cout << "The dealer has a higher value. You Lose!" << endl;
+         cout << "The dealer has a higher value. You Lose!" << endl << endl;
          output.pure("You'll be redirected to the gambling menu");
          PAUSE();
          gamblingMenu(true);
          return;
       } else {
-         cout << "You and the dealer have the same value. It's a Tie!" << endl;
+         cout << "You and the dealer have the same value. It's a Tie!" << endl << endl;
          output.pure("You'll be redirected to the gambling menu");
          PAUSE();
          gamblingMenu(true);
@@ -616,6 +618,7 @@ public:
 CUSTOM_GAMBLING gambling;
 
 void wait() {
+   SLEEP(300);
    cerr << ".";
    SLEEP(300);
    cerr << ".";
@@ -644,7 +647,8 @@ void mainMenu() {
       credits();
       break;
    case 0:
-      output.pure("Bye bye, come back soon!");
+      CLEAR();
+      output.pure("Bye bye, come back soon");
       return;
       break;
    default:
